@@ -1,8 +1,11 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 
 import com.sun.org.apache.xerces.internal.util.Status;
+import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
 
 public class EmpDao {
 	
@@ -99,6 +102,63 @@ public class EmpDao {
 		return Status;
 		
 	}
+	
+	public static Employee getEmployeeId(int id)
+	{
+		Employee e =new Employee();
+		try
+		{
+			Connection con=EmpDao.getConnection();
+			PreparedStatement ps =  con.prepareStatement("select * from user where id=?");
+			
+			ps.setInt(1, id);
+			ResultSet rs= ps.executeQuery();
+			if(rs.next())
+			{
+				e.setId(rs.getInt(1));
+				e.setName(rs.getString(2));
+				e.setPass(rs.getString(3));
+				e.setEmail(rs.getString(4));
+				e.setCon(rs.getString(5));
+			
+			}
+			con.close();
+			
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		return e;
+		
+	}
+	
+	public static List getAllEmployees(){  
+        List list=(List) new ArrayList<Employee>();  
+          
+        try{  
+            Connection con=EmpDao.getConnection();  
+            PreparedStatement ps=con.prepareStatement("select * from user905");  
+            ResultSet rs=ps.executeQuery();  
+            while(rs.next()){  
+            	Employee e=new Employee();  
+                e.setId(rs.getInt(1));  
+                e.setName(rs.getString(2));  
+                e.setPass(rs.getString(3));  
+                e.setEmail(rs.getString(4));  
+                e.setCon(rs.getString(5));  
+                ((ArrayList<Employee>) list).add(e);  
+            }  
+            con.close();  
+        }
+        catch(Exception e)
+        {
+        	e.printStackTrace();
+        	}  
+          
+        return list;  
+    }  
+
 	
 	
 	
